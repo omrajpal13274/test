@@ -31,11 +31,13 @@ mongoose.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifie
 
 
 
-
+//this is making the server listen on port 3000
 server.listen(port, () => {
   console.log(`your server is running on http://localhost:${port}`);
 });
 
+
+// this is making the websocket connection
 
 io.on("connection", (socket) => {
   console.log('connected to the cliend');
