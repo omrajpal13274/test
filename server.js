@@ -100,7 +100,7 @@ async function loginUser(req, res, send) {
   console.log(team, password);
 
   const user = await findUser(team);
-//Checking if username is correct
+//Checking if username is correct and exists
   if (!user) {
     console.log('user does not exist');
   }
