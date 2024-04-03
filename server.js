@@ -9,39 +9,50 @@ const http = require('http');
 
 const app = express();
 app.use(bodyParser.json());
-// this is setting the server port
-const port = process.env.PORT || 3000;
+
+//this is testing the push and pull request using the github
+
+const port = 3000;
 const server = http.createServer(app);
 io = socketIo(server);
+
+
+mongoose.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log("Error connecting to MongoDB:");
+    console.error(err);
+  });
+
+
+
 
 server.listen(port, () => {
   console.log(`your server is running on http://localhost:${port}`);
 });
 
 
-io.on("connection", (socket) =>{
+io.on("connection", (socket) => {
   console.log('connected to the cliend');
   console.log(socket.id, "has joined");
 
-  socket.on("/test", (msg)=>{
+  socket.on("/test", (msg) => {
     console.log(msg);
-    
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected');
+    });
+
   })
-  
-  
+
+
 })
 app.get("/", function (req, res) {
   res.send("your server is running properly on hotspot");
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/learning')
-  .then(() => {
-    console.log("Connected to Mongo");
-  })
-  .catch((err) => {
-    console.log("ERROR");
-    console.log(err);
-  })
 
 
 const userSchema = new mongoose.Schema({
@@ -60,6 +71,12 @@ const userSchema = new mongoose.Schema({
 });
 
 const userModel = mongoose.model("user", userSchema);
+
+userModel.watch().on('change', (change) => {
+  if (change.operationType === 'insert') {
+    io.emit('dataChange', change.fullDocument);
+  }
+});
 
 async function findUser(teamName) {
   try {
@@ -88,17 +105,16 @@ async function loginUser(req, res, send) {
     if (await bcrypt.compare(password, user.password)) {
       const tokenData = { _id: user._id, team: user.team, name: user.username };
       const token = await generateToken(tokenData, "lol", "24h");
-  
+
       res.status(200).json({ status: true, token: token });
     }
-    else
-    {
+    else {
       console.log('wrong password');
-      
+
     }
   }
 
-  
+
 
 }
 
