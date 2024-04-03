@@ -81,8 +81,9 @@ async function loginUser(req, res, send) {
   const user = await findUser(team);
 
   if (!user) {
-    console.log('user does not exist');
+    console.log('user does not exist'); //user doesn't exist
   }
+
   else {
 
     console.log(user);
