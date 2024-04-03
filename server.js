@@ -6,11 +6,14 @@ const bcrypt = require('bcrypt');
 const socketIo = require('socket.io');
 const http = require('http');
 // i was here
+// this is one more comment
 
 const app = express();
 app.use(bodyParser.json());
 
 //this is testing the push and pull request using the github
+
+//adding more comments
 
 const port = 3000;
 const server = http.createServer(app);
@@ -95,7 +98,7 @@ async function loginUser(req, res, send) {
   console.log(team, password);
 
   const user = await findUser(team);
-
+//Checking if username is correct
   if (!user) {
     console.log('user does not exist');
   }
