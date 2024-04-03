@@ -5,11 +5,12 @@ const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const socketIo = require('socket.io');
 const http = require('http');
+// i was here
 
 const app = express();
 app.use(bodyParser.json());
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 const server = http.createServer(app);
 io = socketIo(server);
 
